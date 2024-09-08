@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "8dcbe4e7-7561-4524-b84f-c7433a577eca",
-		"name": "guest-to-guest verification tests",
+		"_postman_id": "499461ff-b62a-47de-bd78-abc84059e2e6",
+		"name": "guest-to-guest verification tests Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "557488"
 	},
@@ -45,10 +45,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/meetingPreferences",
+					"raw": "https://webexapis.com/v1/meetingPreferences",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
@@ -100,55 +101,16 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/meetingPreferences/schedulingOptions",
+					"raw": "https://webexapis.com/v1/meetingPreferences/schedulingOptions",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
 						"meetingPreferences",
 						"schedulingOptions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Retrieve Service App person details",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"  pm.response.to.have.status(200);",
-							"});",
-							"",
-							"const respJson = pm.response.json()",
-							"",
-							"pm.environment.set(\"SAPersonId\",respJson.id)",
-							"pm.environment.set(\"SADisplayName\",respJson.displayName)",
-							"pm.environment.set(\"SAEmail\",respJson.emails[0])"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://{{baseUrl}}/v1/people/me",
-					"protocol": "https",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"v1",
-						"people",
-						"me"
 					]
 				}
 			},
@@ -189,6 +151,8 @@
 							"",
 							"pm.environment.set(\"meetingPassword\", respJson.password)",
 							"pm.environment.set(\"meetingId\", respJson.id)",
+							"pm.environment.set(\"meetingPassword\", respJson.password)",
+							"pm.environment.set(\"meetingSipAddress\", respJson.sipAddress)",
 							""
 						],
 						"type": "text/javascript",
@@ -230,10 +194,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/meetings/",
+					"raw": "https://webexapis.com/v1/meetings/",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
@@ -312,91 +277,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/meetings/join",
+					"raw": "https://webexapis.com/v1/meetings/join",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"v1",
-						"meetings",
-						"join"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "create host start link and join as host",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"  pm.response.to.have.status(200);",
-							"});",
-							"",
-							"const respJson = pm.response.json();",
-							"",
-							"pm.test(\"The response has all properties\", () => {",
-							"    pm.expect(respJson.startLink.startsWith(\"https://\")).to.be.true",
-							"    pm.expect(respJson.joinLink.startsWith(\"https://\")).to.be.true",
-							"    pm.expect(respJson.expiration).to.be.not.null",
-							"})",
-							"",
-							"",
-							"pm.collectionVariables.set(\"Host start link\", respJson.startLink)",
-							"console.log(\"Host start link\", respJson.startLink)",
-							"pm.collectionVariables.set(\"Host join link\", respJson.joinLink)",
-							"console.log(\"Host join link\", respJson.joinLink)",
-							"",
-							"// calls a standalone server to launch the webpage in Google Chrome",
-							"let launchPage = \"http://localhost:3000/myConf?conf=\" + respJson.startLink",
-							"pm.sendRequest(launchPage, (err, response) => {",
-							"    // This will have the output of your batch file",
-							"    console.log(response.text());",
-							"})",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"meetingId\": \"{{meetingId}}\",\n    \"password\" : \"{{meetingPassword}}\",\n    \"joinDirectly\" : false,\n    \"email\":\"{{$randomEmail}}\",\n    \"displayName\":\"Dr. {{$randomFullName}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://{{baseUrl}}/v1/meetings/join",
-					"protocol": "https",
-					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
@@ -474,10 +359,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/meetings/join",
+					"raw": "https://webexapis.com/v1/meetings/join",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
@@ -547,10 +433,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/guests/token",
+					"raw": "https://webexapis.com/v1/guests/token",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
@@ -620,15 +507,98 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/guests/token",
+					"raw": "https://webexapis.com/v1/guests/token",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
 						"guests",
 						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create host start link and join as host",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const respJson = pm.response.json();",
+							"",
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(respJson.startLink.startsWith(\"https://\")).to.be.true",
+							"    pm.expect(respJson.joinLink.startsWith(\"https://\")).to.be.true",
+							"    pm.expect(respJson.expiration).to.be.not.null",
+							"})",
+							"",
+							"",
+							"pm.collectionVariables.set(\"Host start link\", respJson.startLink)",
+							"console.log(\"Host start link\", respJson.startLink)",
+							"pm.collectionVariables.set(\"Host join link\", respJson.joinLink)",
+							"console.log(\"Host join link\", respJson.joinLink)",
+							"",
+							"// calls a standalone server to launch the webpage in Google Chrome",
+							"let launchPage = \"http://localhost:3000/myConf?conf=\" + respJson.startLink",
+							"pm.sendRequest(launchPage, (err, response) => {",
+							"    // This will have the output of your batch file",
+							"    console.log(response.text());",
+							"})",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"meetingId\": \"{{meetingId}}\",\n    \"password\" : \"{{meetingPassword}}\",\n    \"joinDirectly\" : false,\n    \"email\":\"{{$randomEmail}}\",\n    \"displayName\":\"Dr. {{$randomFullName}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://webexapis.com/v1/meetings/join",
+					"protocol": "https",
+					"host": [
+						"webexapis",
+						"com"
+					],
+					"path": [
+						"v1",
+						"meetings",
+						"join"
 					]
 				}
 			},
@@ -712,10 +682,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/meetings/join",
+					"raw": "https://webexapis.com/v1/meetings/join",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
@@ -804,15 +775,57 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/meetings/join",
+					"raw": "https://webexapis.com/v1/meetings/join",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
 						"meetings",
 						"join"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Service App person details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const respJson = pm.response.json()",
+							"",
+							"pm.environment.set(\"SAPersonId\",respJson.id)",
+							"pm.environment.set(\"SADisplayName\",respJson.displayName)",
+							"pm.environment.set(\"SAEmail\",respJson.emails[0])"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://webexapis.com/v1/people/me",
+					"protocol": "https",
+					"host": [
+						"webexapis",
+						"com"
+					],
+					"path": [
+						"v1",
+						"people",
+						"me"
 					]
 				}
 			},
@@ -875,10 +888,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/rooms",
+					"raw": "https://webexapis.com/v1/rooms",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
@@ -943,10 +957,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/memberships",
+					"raw": "https://webexapis.com/v1/memberships",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
@@ -1011,10 +1026,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/memberships",
+					"raw": "https://webexapis.com/v1/memberships",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
@@ -1079,10 +1095,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/memberships",
+					"raw": "https://webexapis.com/v1/memberships",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
@@ -1143,10 +1160,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/memberships?roomId={{meetingRoomId}}",
+					"raw": "https://webexapis.com/v1/memberships?roomId={{meetingRoomId}}",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
@@ -1238,10 +1256,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/meetings/",
+					"raw": "https://webexapis.com/v1/meetings/",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
@@ -1319,10 +1338,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{baseUrl}}/v1/meetings/join",
+					"raw": "https://webexapis.com/v1/meetings/join",
 					"protocol": "https",
 					"host": [
-						"{{baseUrl}}"
+						"webexapis",
+						"com"
 					],
 					"path": [
 						"v1",
@@ -1339,7 +1359,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "NmVlYjYwYjAtNWEzNi00Njc1LWFlNmYtNDVlYTVkMjc3MDAxOGU0YzViMTMtYjRl_P0A1_6920b9ec-4efc-4767-a4f6-4dc85478ee6b",
+				"value": "ZDhkMzYxY2YtZjcwNy00NzUzLTk2ZGItNDM4OGJiNmFlNzdjM2Q4ZTkzZGUtZDY0_P0A1_8cbb430e-1846-4da9-ba9f-e86c9b0877db",
 				"type": "string"
 			}
 		]
